@@ -11,34 +11,28 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Get all .cpp files in the src/ directory
-file(GLOB SRC_FILES "src/*.cpp")
+file(GLOB_RECURSE SRC_FILES "src/*.cpp")
 
-# Create an executable for each .cpp file
-foreach(SRC_FILE ${SRC_FILES})
-    # Get the filename without extension
-    get_filename_component(FILE_NAME ${SRC_FILE} NAME_WE)
-    
-    # Add executable
-    add_executable(${FILE_NAME} ${SRC_FILE})
-    
-    # Set compile options for each executable
-    target_compile_options(${FILE_NAME} PRIVATE 
-        -Wall -Wextra -Weffc++
-        -Werror=uninitialized
-        -Werror=return-type
-        -Wconversion -Wsign-compare
-        -Werror=unused-result
-        -Werror=suggest-override
-        -Wzero-as-null-pointer-constant
-        # -Wmissing-declarations
-        -Wold-style-cast
-        -Wnon-virtual-dtor
-        -Werror
-    )
+# Create a single executable from all .cpp files
+add_executable(pathfinder ${SRC_FILES})
 
-    # Include header files from include/ directory
-    target_include_directories(${FILE_NAME} PRIVATE include)
-endforeach()
+# Set compile options for the executable
+target_compile_options(pathfinder PRIVATE 
+    -Wall -Wextra -Weffc++
+    -Werror=uninitialized
+    -Werror=return-type
+    -Wconversion -Wsign-compare
+    -Werror=unused-result
+    -Werror=suggest-override
+    -Wzero-as-null-pointer-constant
+    # -Wmissing-declarations
+    -Wold-style-cast
+    -Wnon-virtual-dtor
+    -Werror
+)
+
+# Include header files from include/ directory
+target_include_directories(pathfinder PRIVATE include)
 
 # enable_testing()
 

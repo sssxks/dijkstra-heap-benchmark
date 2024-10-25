@@ -1,68 +1,62 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <string>
 #include <vector>
-#include <chrono>
+#include <queue>
+#include <limits>
+#include <cassert>
+
 #include "pathfinder.hpp"
 
 using namespace std;
 
-struct QueryPair {
-    int start, end;
-};
-
-int main() {
-    ifstream inputFile("data.in");
-    if (!inputFile) {
-        cerr << "Error opening input file" << endl;
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        cerr << "Usage: " << argv[0] << " <file_path>" << endl;
         return 1;
     }
 
-    int n, m, q;
-    inputFile >> n >> m >> q;
-
-    PGraph G = BuildAGraph(n, m);
-    vector<QueryPair> queryPairs(q);
-
-    for (int i = 0; i < m; ++i) {
-        int f, t, d;
-        inputFile >> f >> t >> d;
-        AddEdge(G, f - 1, t - 1, d);
+    ifstream file(argv[1]);
+    if (!file.is_open()) {
+        cerr << "Failed to open the file: " << argv[1] << endl;
+        return 1;
     }
 
-    for (int i = 0; i < q; ++i) {
-        int s, e;
-        inputFile >> s >> e;
-        queryPairs[i] = {s - 1, e - 1};
+    int n, m;
+    file >> n >> m;
+
+    vector<vector<Edge>> graph(n);
+    string line;
+    while (getline(file, line)) {
+        if (line.empty() || line[0] == 'c' || line[0] == 'p') {
+            continue;
+        }
+
+        assert(line[0] == 'a');
+        istringstream iss(line.substr(2));
+        int u, v, w;
+        iss >> u >> v >> w;
+        graph[u].push_back({v, w});
     }
 
-    inputFile.close();
+    file.close();
 
-    auto runDijkstra = [&](const string& filename, auto dijkstraFunc) {
-        ofstream outputFile(filename);
-        if (!outputFile) {
-            cerr << "Error opening output file: " << filename << endl;
-            return;
+    int start;
+    cout << "Enter start vertex: ";
+    cin >> start;
+
+    vector<int> distances;
+    dijkstra(start, graph, distances);
+
+    cout << "Shortest distances from vertex " << start << ":" << endl;
+    for (int i = 0; i < n; ++i) {
+        if (distances[i] == INF) {
+            cout << "Vertex " << i << ": INF" << endl;
+        } else {
+            cout << "Vertex " << i << ": " << distances[i] << endl;
         }
-
-        outputFile << "The result using " << filename << " is: \n";
-        auto begin = chrono::high_resolution_clock::now();
-
-        for (const auto& query : queryPairs) {
-            Dis ans = dijkstraFunc(G, query.start, query.end);
-            outputFile << ans << '\n';
-        }
-
-        auto finish = chrono::high_resolution_clock::now();
-        chrono::duration<double> elapsed = finish - begin;
-        outputFile << "The time using " << filename << " is: " << elapsed.count() << " seconds\n";
-        outputFile.close();
-    };
-
-    runDijkstra("PriorityQueue.out", DijkstraUsingPriorityQueue);
-    cout << "The function using Priority Queue completed!" << endl;
-
-    runDijkstra("FibonacciHeap.out", DijkstraUsingFibonacciHeap);
-    cout << "The function using Fibonacci Heap completed!" << endl;
+    }
 
     return 0;
 }
