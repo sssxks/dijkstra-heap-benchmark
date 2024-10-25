@@ -8,6 +8,7 @@
 
 #include "pathfinder.hpp"
 #include "fiboheap.hpp"
+#include "referenceheap.hpp"
 
 using namespace std;
 
@@ -48,7 +49,7 @@ void runDijkstra()
     cin >> start;
 
     vector<int> distances;
-    dijkstra<FiboHeap<std::pair<int, int>>>(start, graph, distances);
+    dijkstra<ReferenceHeap<NearestRecord>>(start, graph, distances);
 
     cout << "Shortest distances from vertex " << start << ":" << endl;
     for (int i = 0; i < n; ++i)
