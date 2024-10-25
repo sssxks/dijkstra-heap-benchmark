@@ -69,7 +69,7 @@ void FiboHeap<T>::consolidate() {
 }
 
 template <typename T>
-void FiboHeap<T>::insert(const T& value) {
+void FiboHeap<T>::push(const T& value) {
     Node* newNode = new Node(value);
     if (minNode == nullptr) {
         minNode = newNode;
@@ -86,7 +86,7 @@ void FiboHeap<T>::insert(const T& value) {
 }
 
 template <typename T>
-T FiboHeap<T>::extractMin() {
+T FiboHeap<T>::pop() {
     if (minNode == nullptr) {
         throw std::runtime_error("Heap is empty");
     }
@@ -120,4 +120,9 @@ T FiboHeap<T>::extractMin() {
     delete z;
     nodeCount--;
     return minValue;
+}
+
+template <typename T>
+bool FiboHeap<T>::empty() const {
+    return minNode == nullptr;
 }

@@ -32,13 +32,12 @@ private:
 public:
     FiboHeap() : minNode(nullptr), nodeCount(0) {};
 
-    void insert(const T &value) override;
-    T extractMin() override;
-    bool isEmpty() const override;
+    void push(const T &value) override;
+    T pop() override;
+    bool empty() const override;
 
     ~FiboHeap()
     {
-        // Destructor implementation to free allocated memory
-        // This part is left as an exercise for the reader
+
     }
 };

@@ -5,9 +5,9 @@ class BinaryHeap : public Heap<T>
 {
 public:
     BinaryHeap() = default;
-    void insert(const T &value) override;
-    T extractMin() override;
-    bool isEmpty() const override;
+    void push(const T &value) override;
+    T pop() override;
+    bool empty() const override;
 
 private:
     std::vector<T> data;
@@ -16,23 +16,23 @@ private:
 };
 
 template <typename T>
-void BinaryHeap<T>::insert(const T &value)
+void BinaryHeap<T>::push(const T &value)
 {
     data.push_back(value);
     heapifyUp(data.size() - 1);
 }
 
 template <typename T>
-T BinaryHeap<T>::extractMin()
+T BinaryHeap<T>::pop()
 {
-    if (isEmpty())
+    if (empty())
     {
         throw std::runtime_error("Heap is empty");
     }
     T minValue = data.front();
     data.front() = data.back();
     data.pop_back();
-    if (!isEmpty())
+    if (!empty())
     {
         heapifyDown(0);
     }
@@ -40,7 +40,7 @@ T BinaryHeap<T>::extractMin()
 }
 
 template <typename T>
-bool BinaryHeap<T>::isEmpty() const
+bool BinaryHeap<T>::empty() const
 {
     return data.empty();
 }

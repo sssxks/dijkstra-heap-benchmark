@@ -4,10 +4,11 @@
 #include <stdexcept>
 
 template <typename T>
-class Heap {
+class Heap
+{
 public:
-    virtual void insert(const T& value) = 0;
-    virtual T extractMin() = 0;
-    virtual bool isEmpty() const = 0;
+    virtual void push(const T &value) = 0;
+    virtual T pop() = 0;
+    virtual bool empty() const = 0;
     virtual ~Heap() = default;
 };

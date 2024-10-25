@@ -1,35 +1,33 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <string>
 #include <vector>
-#include <queue>
-#include <limits>
+#include <string>
 #include <cassert>
+#include <limits>
 
 #include "pathfinder.hpp"
+#include "fiboheap.hpp"
 
 using namespace std;
 
-int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        cerr << "Usage: " << argv[0] << " <file_path>" << endl;
-        return 1;
+vector<vector<Edge>> graph;
+int n;
+
+void readGraphFromFile(const string &filename)
+{
+    ifstream file(filename);
+    if (!file.is_open())
+    {
+        cerr << "Error opening file" << endl;
+        exit(1);
     }
 
-    ifstream file(argv[1]);
-    if (!file.is_open()) {
-        cerr << "Failed to open the file: " << argv[1] << endl;
-        return 1;
-    }
-
-    int n, m;
-    file >> n >> m;
-
-    vector<vector<Edge>> graph(n);
     string line;
-    while (getline(file, line)) {
-        if (line.empty() || line[0] == 'c' || line[0] == 'p') {
+    while (getline(file, line))
+    {
+        if (line.empty() || line[0] == 'c' || line[0] == 'p')
+        {
             continue;
         }
 
@@ -41,22 +39,41 @@ int main(int argc, char* argv[]) {
     }
 
     file.close();
+}
 
+void runDijkstra()
+{
     int start;
     cout << "Enter start vertex: ";
     cin >> start;
 
     vector<int> distances;
-    dijkstra(start, graph, distances);
+    dijkstra<FiboHeap<std::pair<int, int>>>(start, graph, distances);
 
     cout << "Shortest distances from vertex " << start << ":" << endl;
-    for (int i = 0; i < n; ++i) {
-        if (distances[i] == INF) {
+    for (int i = 0; i < n; ++i)
+    {
+        if (distances[i] == INF)
+        {
             cout << "Vertex " << i << ": INF" << endl;
-        } else {
+        }
+        else
+        {
             cout << "Vertex " << i << ": " << distances[i] << endl;
         }
     }
+}
 
+int main(int argc, char *argv[])
+{
+    if (argc < 2)
+    {
+        cerr << "Usage: " << argv[0] << " <filename>" << endl;
+        return 1;
+    }
+
+    string filename = argv[1];
+    readGraphFromFile(filename);
+    runDijkstra();
     return 0;
 }

@@ -4,28 +4,30 @@
 #include <vector>
 #include <queue>
 
-using namespace std;
-
-void dijkstra(int start, const vector<vector<Edge>>& graph, vector<int>& distances) {
+template <typename PriorityQueue>
+void dijkstra(int start, const std::vector<std::vector<Edge>> &graph, std::vector<int> &distances)
+{
     auto n = graph.size();
     distances.assign(n, INF);
     distances[start] = 0;
 
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    PriorityQueue pq;
     pq.push({0, start});
 
-    while (!pq.empty()) {
-        int dist = pq.top().first;
-        int u = pq.top().second;
-        pq.pop();
+    while (!pq.empty())
+    {
+        auto [dist, u] = pq.pop();
 
-        if (dist > distances[u]) continue;
+        if (dist > distances[u])
+            continue;
 
-        for (const Edge& edge : graph[u]) {
+        for (const Edge &edge : graph[u])
+        {
             int v = edge.to;
             int weight = edge.weight;
 
-            if (distances[u] + weight < distances[v]) {
+            if (distances[u] + weight < distances[v])
+            {
                 distances[v] = distances[u] + weight;
                 pq.push({distances[v], v});
             }
