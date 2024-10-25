@@ -35,8 +35,3 @@ target_compile_options(pathfinder PRIVATE
 target_include_directories(pathfinder PRIVATE include)
 
 # enable_testing()
-
-# Add the test using the custom script
-# add_test(NAME Testpathfinder
-#          COMMAND ${CMAKE_SOURCE_DIR}/script/run_test.sh
-#          $<TARGET_FILE:pathfinder> ${CMAKE_SOURCE_DIR}/input.txt ${CMAKE_SOURCE_DIR}/output.txt)

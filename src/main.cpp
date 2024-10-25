@@ -12,11 +12,10 @@
 
 using namespace std;
 
-vector<vector<Edge>> graph;
-int n;
-
-void readGraphFromFile(const string &filename)
+vector<vector<Edge>> readGraphFromFile(const string &filename)
 {
+    vector<vector<Edge>> graph;
+
     ifstream file(filename);
     if (!file.is_open())
     {
@@ -27,32 +26,43 @@ void readGraphFromFile(const string &filename)
     string line;
     while (getline(file, line))
     {
-        if (line.empty() || line[0] == 'c' || line[0] == 'p')
+        if (line.empty() || line[0] == 'c') // c for comment
         {
             continue;
         }
 
-        assert(line[0] == 'a');
+        if (line[0] == 'p') // p for size info
+        {
+            istringstream iss(line.substr(4));
+            int n, m;
+            iss >> n >> m; // n : nodes, m : arcs
+
+            graph.resize(n, vector<Edge>());
+            continue;
+        }
+
+        assert(line[0] == 'a'); // a for arc
         istringstream iss(line.substr(2));
         int u, v, w;
         iss >> u >> v >> w;
-        graph[u].push_back({v, w});
+        graph[u-1].push_back({v-1, w});
     }
 
     file.close();
+    return graph;
 }
 
-void runDijkstra()
+void runDijkstra(vector<vector<Edge>> &graph)
 {
     int start;
     cout << "Enter start vertex: ";
     cin >> start;
 
     vector<int> distances;
-    dijkstra<ReferenceHeap<NearestRecord>>(start, graph, distances);
+    dijkstra<FiboHeap<NearestRecord>>(start, graph, distances);
 
     cout << "Shortest distances from vertex " << start << ":" << endl;
-    for (int i = 0; i < n; ++i)
+    for (long unsigned int i = 0; i < graph.size(); ++i)
     {
         if (distances[i] == INF)
         {
@@ -74,7 +84,7 @@ int main(int argc, char *argv[])
     }
 
     string filename = argv[1];
-    readGraphFromFile(filename);
-    runDijkstra();
+    auto graph = readGraphFromFile(filename);
+    runDijkstra(graph);
     return 0;
 }
