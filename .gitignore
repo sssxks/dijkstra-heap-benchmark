@@ -1,0 +1,53 @@
+# Ignore build directories
+/build/
+/bin/
+/obj/
+/out/
+
+# Ignore CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Ignore compiled object files
+*.o
+*.obj
+*.lo
+*.d
+
+# Ignore executable files
+*.exe
+*.out
+*.app
+
+# Ignore libraries
+*.lib
+*.a
+*.la
+*.lo
+*.dll
+*.dylib
+*.so
+
+# Ignore debug files
+*.gch
+*.pch
+*.pdb
+
+# Ignore logs and databases
+*.log
+*.sql
+*.sqlite
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE specific files
+.idea/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+/data/

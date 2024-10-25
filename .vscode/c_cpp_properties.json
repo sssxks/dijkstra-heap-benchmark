@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "CMake Compile commands",
+            "compileCommands": "build/compile_commands.json"
+            //,
+            // "configurationProvider": ""
+        }
+    ],
+    "version": 4
+}
