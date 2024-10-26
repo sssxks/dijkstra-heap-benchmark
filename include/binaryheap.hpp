@@ -76,23 +76,28 @@ void BinaryHeap<T>::heapifyDown(int index)
     auto size = static_cast<int>(data.size());
     while (index < size)
     {
-        int leftChild = 2 * index + 1;
-        int rightChild = 2 * index + 2;
-        int smallest = index;
+        int leftChild = 2 * index + 1;  // Index of the left child
+        int rightChild = 2 * index + 2; // Index of the right child
+        int smallest = index;           // Assume the current index is the smallest
 
+        // Check if the left child is smaller than the current smallest
         if (leftChild < size && data[leftChild] < data[smallest])
         {
             smallest = leftChild;
         }
+        // Check if the right child is smaller than the current smallest
         if (rightChild < size && data[rightChild] < data[smallest])
         {
             smallest = rightChild;
         }
+        // If the smallest is still the current index, the heap property is satisfied
         if (smallest == index)
         {
             break;
         }
+        // Swap the current index with the smallest child
         std::swap(data[index], data[smallest]);
+        // Move to the smallest child index
         index = smallest;
     }
 }

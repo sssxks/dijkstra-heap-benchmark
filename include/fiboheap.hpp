@@ -291,38 +291,59 @@ public:
 };
 
 template <typename T>
+/**
+ * @brief Links two nodes in the heap.
+ *
+ * This function links node y to node x, making y a child of x.
+ *
+ * @param y The node to be linked.
+ * @param x The node to which y will be linked.
+ */
 void FiboHeap<T>::link(Node *y, Node *x)
 {
+    // Remove y from the root list
     y->left->right = y->right;
     y->right->left = y->left;
+
+    // Make y a child of x
     y->parent = x;
     if (x->child == nullptr)
     {
+        // If x has no children, make y its only child
         x->child = y;
         y->right = y;
         y->left = y;
     }
     else
     {
+        // Otherwise, add y to the child list of x
         y->left = x->child;
         y->right = x->child->right;
         x->child->right->left = y;
         x->child->right = y;
     }
+
+    // Increase the degree of x
     x->degree++;
+
+    // Mark y as unmarked
     y->mark = false;
 }
 
 template <typename T>
 void FiboHeap<T>::consolidate()
 {
+    // Calculate the maximum degree of any node in the heap
     int maxDegree = static_cast<int>(std::log2(nodeCount)) + 1;
+    // Create an array to store roots of trees with different degrees
     std::vector<Node *> A(maxDegree, nullptr);
 
+    // Create a list of root nodes
     std::vector<Node *> rootList;
     Node *x = minNode;
     if (x != nullptr)
     {
+        // Traverse the root list and add nodes to rootList
         do
         {
             rootList.push_back(x);
@@ -330,10 +351,12 @@ void FiboHeap<T>::consolidate()
         } while (x != minNode);
     }
 
+    // Process each node in the root list
     for (Node *w : rootList)
     {
         x = w;
         int d = x->degree;
+        // Merge trees of the same degree
         while (A[d] != nullptr)
         {
             Node *y = A[d];
@@ -348,6 +371,7 @@ void FiboHeap<T>::consolidate()
         A[d] = x;
     }
 
+    // Reconstruct the root list from the array A
     minNode = nullptr;
     for (Node *y : A)
     {
@@ -382,22 +406,30 @@ inline FiboHeap<T>::FiboHeap() : minNode(nullptr), nodeCount(0)
 template <typename T>
 void FiboHeap<T>::push(const T &value)
 {
+    // Create a new node with the given value
     Node *newNode = new Node(value);
+
+    // If the heap is empty, set the new node as the minimum node
     if (minNode == nullptr)
     {
         minNode = newNode;
     }
     else
     {
+        // Insert the new node into the root list
         newNode->left = minNode;
         newNode->right = minNode->right;
         minNode->right->left = newNode;
         minNode->right = newNode;
+
+        // Update the minimum node if necessary
         if (value < minNode->value)
         {
             minNode = newNode;
         }
     }
+
+    // Increment the node count
     nodeCount++;
 }
 
@@ -410,31 +442,44 @@ T FiboHeap<T>::pop()
     }
 
     Node *z = minNode;
+
+    // If the minimum node has children, add them to the root list
     if (z->child != nullptr)
     {
         Node *x = z->child;
         do
         {
             Node *next = x->right;
+
+            // Remove x from the child list
             x->left->right = x->right;
             x->right->left = x->left;
+
+            // Add x to the root list
             x->left = minNode;
             x->right = minNode->right;
             minNode->right->left = x;
             minNode->right = x;
+
+            // Set x's parent to nullptr
             x->parent = nullptr;
+
             x = next;
         } while (x != z->child);
     }
 
+    // Remove z from the root list
     z->left->right = z->right;
     z->right->left = z->left;
+
+    // If z was the only node in the root list, set minNode to nullptr
     if (z == z->right)
     {
         minNode = nullptr;
     }
     else
     {
+        // Otherwise, set minNode to the next node and consolidate the heap
         minNode = z->right;
         consolidate();
     }
@@ -442,5 +487,6 @@ T FiboHeap<T>::pop()
     T minValue = z->value;
     delete z;
     nodeCount--;
+
     return minValue;
 }
