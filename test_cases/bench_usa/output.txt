@@ -1,0 +1,36 @@
+Fibonacci Heap:
+Shortest distance from vertex 139929 to vertex 519843: 26708480
+Shortest distance from vertex 9340457 to vertex 10179344: 9753156
+Shortest distance from vertex 22669182 to vertex 5854787: 29977365
+Shortest distance from vertex 22301083 to vertex 14042558: 26852675
+Shortest distance from vertex 14131421 to vertex 4003657: 16757358
+Shortest distance from vertex 2429196 to vertex 6911742: 31481999
+Shortest distance from vertex 12637960 to vertex 5905312: 12827270
+Shortest distance from vertex 11054087 to vertex 22891958: 7893583
+Shortest distance from vertex 17537829 to vertex 10425896: 6434456
+Shortest distance from vertex 14107561 to vertex 6736456: 37894296
+Total time: 85430305 microseconds
+Binary Heap:
+Shortest distance from vertex 139929 to vertex 519843: 26708480
+Shortest distance from vertex 9340457 to vertex 10179344: 9753156
+Shortest distance from vertex 22669182 to vertex 5854787: 29977365
+Shortest distance from vertex 22301083 to vertex 14042558: 26852675
+Shortest distance from vertex 14131421 to vertex 4003657: 16757358
+Shortest distance from vertex 2429196 to vertex 6911742: 31481999
+Shortest distance from vertex 12637960 to vertex 5905312: 12827270
+Shortest distance from vertex 11054087 to vertex 22891958: 7893583
+Shortest distance from vertex 17537829 to vertex 10425896: 6434456
+Shortest distance from vertex 14107561 to vertex 6736456: 37894296
+Total time: 28471819 microseconds
+Skew Heap:
+Shortest distance from vertex 139929 to vertex 519843: 26708480
+Shortest distance from vertex 9340457 to vertex 10179344: 9753156
+Shortest distance from vertex 22669182 to vertex 5854787: 29977365
+Shortest distance from vertex 22301083 to vertex 14042558: 26852675
+Shortest distance from vertex 14131421 to vertex 4003657: 16757358
+Shortest distance from vertex 2429196 to vertex 6911742: 31481999
+Shortest distance from vertex 12637960 to vertex 5905312: 12827270
+Shortest distance from vertex 11054087 to vertex 22891958: 7893583
+Shortest distance from vertex 17537829 to vertex 10425896: 6434456
+Shortest distance from vertex 14107561 to vertex 6736456: 37894296
+Total time: 38242873 microseconds

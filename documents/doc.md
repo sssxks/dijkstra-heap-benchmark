@@ -9,7 +9,7 @@ This project focuses on implementing and benchmarking Dijkstra's algorithm in re
 ```sh
 .
 ├── CMakeLists.txt
-├── data # put the these file here
+├── data # put the mentioned file in this directory
 │   ├── USA-road-d.USA.co
 │   ├── USA-road-d.USA.gr
 │   ├── USA-road-t.NY.gr
@@ -22,9 +22,6 @@ This project focuses on implementing and benchmarking Dijkstra's algorithm in re
 │   ├── heap.hpp
 │   ├── pathfinder.hpp
 │   └── skewheap.hpp
-├── obsolete
-│   ├── 1.cpp
-│   └── referenceheap.hpp
 ├── script
 │   ├── nb.ipynb
 │   └── run_test.sh
@@ -147,7 +144,7 @@ On the dataset USA-road-t.USA.gr, which is 1.5 GiB in size, we perform a test wi
 | Binary Heap    |28471819|
 | Skew Heap      |38242873|
 
-![results](../script/benchmark_results_comparison.svg)
+![results](benchmark_results_comparison.svg)
 
 ### Conclusion
 
@@ -159,16 +156,8 @@ From the benchmark results, we can draw the following conclusions regarding the 
 
 2. **Fibonacci Heap** performs the worst in both datasets, despite its theoretical advantages. This suggests that the constant factors and the complexity of maintaining the heap structure in practice make it less suitable for real-world applications where cache efficiency and memory access patterns play a significant role.
 
-3. **Skew Heap** performs better than the Fibonacci heap but worse than the binary heap. This is expected, as skew heaps offer a balance between simplicity and efficiency, but they do not outperform binary heaps in this context.
-
-4. The performance gap between the data structures becomes more pronounced with larger datasets. For example, in the larger USA-road-t.USA.gr dataset, the Fibonacci heap's performance degrades significantly, likely due to its poor cache locality and higher memory overhead.
-
 #### Limitations
 
 1. **Cache and Memory Management**: The performance of the Fibonacci heap, in particular, is likely affected by poor cache locality and memory overhead. The large size of the USA-road-t.USA.gr dataset (1.5 GiB) exacerbates this issue, as the data structures cannot fit entirely in the CPU cache. This leads to frequent cache misses and slower memory access, which significantly impacts performance. Future work could explore optimizations such as cache-aware data structures or parallelism to mitigate these issues.
 
-2. **Limited Query Pairs for Large Datasets**: Due to the large size of the USA-road-t.USA.gr dataset, we were only able to run 10 query pairs. This small sample size may not fully capture the performance characteristics of the algorithms under more extensive testing. Running 1000 query pairs, as done with the smaller dataset, would provide a more comprehensive benchmark, but this would require further optimizations to make it feasible.
-
-3. **Single-threaded Implementation**: The current implementation of Dijkstra's algorithm is single-threaded. Given the large size of the datasets and the increasing availability of multi-core processors, parallelizing the algorithm could lead to significant performance improvements. Future work could explore parallel implementations of Dijkstra's algorithm, especially for large datasets.
-
-4. **Real-world Graph Characteristics**: The datasets used in this benchmark are road networks, which have specific characteristics such as sparsity and locality. The performance of the heaps may differ for other types of graphs, such as dense graphs or graphs with different topological properties. Further testing on a wider variety of graph types would provide a more general understanding of the performance of these data structures.
+2. **Real-world Graph Characteristics**: The datasets used in this benchmark are road networks, which have specific characteristics such as sparsity and locality. The performance of the heaps may differ for other types of graphs, such as dense graphs or graphs with different topological properties. Further testing on a wider variety of graph types would provide a more general understanding of the performance of these data structures.

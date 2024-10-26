@@ -51,3 +51,5 @@ Thumbs.db
 *.sublime-workspace
 
 /data/
+
+obsolete/

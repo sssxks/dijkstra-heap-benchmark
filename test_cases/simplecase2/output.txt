@@ -1,0 +1,15 @@
+Reference Heap:
+Shortest distance from vertex 1 to vertex 6: 60
+Shortest distance from vertex 2 to vertex 6: 30
+Shortest distance from vertex 1 to vertex 4: 50
+Total time: 2 microseconds
+Binary Heap:
+Shortest distance from vertex 1 to vertex 6: 60
+Shortest distance from vertex 2 to vertex 6: 30
+Shortest distance from vertex 1 to vertex 4: 50
+Total time: 1 microseconds
+Skew Heap:
+Shortest distance from vertex 1 to vertex 6: 60
+Shortest distance from vertex 2 to vertex 6: 30
+Shortest distance from vertex 1 to vertex 4: 50
+Total time: 0 microseconds
