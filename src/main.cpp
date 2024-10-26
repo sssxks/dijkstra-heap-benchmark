@@ -91,21 +91,20 @@ void runDijkstra(vector<vector<Edge>> &graph, const vector<pair<int, int>> &quer
     {
         int start = query.first;
         int end = query.second;
-        vector<int> distances;
         auto start_time = high_resolution_clock::now();
-        dijkstra<T>(start, graph, distances);
+        int shortest_distance = dijkstra<T>(start, end, graph);
         auto end_time = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(end_time - start_time).count();
         total_time += duration;
 
         cout << "Shortest distance from vertex " << start + 1 << " to vertex " << end + 1 << ": ";
-        if (distances[end] == INF)
+        if (shortest_distance == INF)
         {
             cout << "INF" << endl;
         }
         else
         {
-            cout << distances[end] << endl;
+            cout << shortest_distance << endl;
         }
     }
     cout << "Total time: " << total_time << " microseconds" << endl;

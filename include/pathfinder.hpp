@@ -34,21 +34,23 @@ struct NearestRecord
 
 /**
  * @file pathfinder.hpp
- * @brief Contains the implementation of Dijkstra's algorithm for finding the shortest paths in a graph.
+ * @brief Contains the implementation of Dijkstra's algorithm for finding the shortest path in a graph from a start vertex to a destination vertex.
  * 
  * @tparam PriorityQueue The type of priority queue to be used in the algorithm. It must support push and pop operations.
  * 
  * @param start The starting vertex for Dijkstra's algorithm.
+ * @param destination The destination vertex for which the shortest path is to be found.
  * @param graph A reference to the adjacency list representation of the graph. Each element in the outer vector represents a vertex, and each inner vector contains edges (of type Edge) originating from that vertex.
- * @param distances A reference to a vector where the shortest distances from the start vertex to each vertex will be stored. The vector will be resized to match the number of vertices in the graph.
  * 
- * The function uses a priority queue to efficiently find the shortest paths from the start vertex to all other vertices in the graph. The distances vector will be updated with the shortest distances, where distances[i] represents the shortest distance from the start vertex to vertex i.
+ * @return The shortest path length from the start vertex to the destination vertex. If there is no path, returns INF.
+ * 
+ * The function uses a priority queue to efficiently find the shortest path from the start vertex to the destination vertex in the graph.
  */
 template <typename PriorityQueue>
-void dijkstra(int start, const std::vector<std::vector<Edge>> &graph, std::vector<int> &distances)
+int dijkstra(int start, int destination, const std::vector<std::vector<Edge>> &graph)
 {
     auto n = graph.size();
-    distances.assign(n, INF);
+    std::vector<int> distances(n, INF);
     distances[start] = 0;
 
     PriorityQueue pq;
@@ -58,6 +60,9 @@ void dijkstra(int start, const std::vector<std::vector<Edge>> &graph, std::vecto
     {
         // get the vertex with the smallest distance
         auto [dist, u] = pq.pop();
+
+        if (u == destination)
+            return dist;
 
         if (dist > distances[u])
             continue;
@@ -74,4 +79,6 @@ void dijkstra(int start, const std::vector<std::vector<Edge>> &graph, std::vecto
             }
         }
     }
+
+    return INF; // If the destination is not reachable
 }
