@@ -10,7 +10,6 @@
 
 #include "pathfinder.hpp"
 #include "fiboheap.hpp"
-#include "referenceheap.hpp"
 #include "binaryheap.hpp"
 #include "skewheap.hpp"
 
@@ -126,8 +125,6 @@ int main(int argc, char *argv[])
 
     cout << "Fibonacci Heap:" << endl;
     runDijkstra<FiboHeap<NearestRecord>>(graph, queries);
-    cout << "Reference Heap:" << endl;
-    runDijkstra<ReferenceHeap<NearestRecord>>(graph, queries);
     cout << "Binary Heap:" << endl;
     runDijkstra<BinaryHeap<NearestRecord>>(graph, queries);
     cout << "Skew Heap:" << endl;
