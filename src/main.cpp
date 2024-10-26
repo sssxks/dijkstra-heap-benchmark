@@ -45,46 +45,69 @@ vector<vector<Edge>> readGraphFromFile(const string &filename)
         istringstream iss(line.substr(2));
         int u, v, w;
         iss >> u >> v >> w;
-        graph[u-1].push_back({v-1, w});
+        graph[u - 1].push_back({v - 1, w});
     }
 
     file.close();
     return graph;
 }
 
-void runDijkstra(vector<vector<Edge>> &graph)
+vector<int> readQueriesFromFile(const string &filename)
 {
-    int start;
-    cout << "Enter start vertex: ";
-    cin >> start;
-
-    vector<int> distances;
-    dijkstra<FiboHeap<NearestRecord>>(start, graph, distances);
-
-    cout << "Shortest distances from vertex " << start << ":" << endl;
-    for (long unsigned int i = 0; i < graph.size(); ++i)
+    vector<int> queries;
+    ifstream file(filename);
+    if (!file.is_open())
     {
-        if (distances[i] == INF)
+        cerr << "Error opening file" << endl;
+        exit(1);
+    }
+
+    int query;
+    while (file >> query)
+    {
+        queries.push_back(query - 1);
+    }
+
+    file.close();
+    return queries;
+}
+
+void runDijkstra(vector<vector<Edge>> &graph, const vector<int> &queries)
+{
+    for (int start : queries)
+    {
+        vector<int> distances;
+        dijkstra<FiboHeap<NearestRecord>>(start, graph, distances);
+
+        cout << "Shortest distances from vertex " << start + 1 << ":" << endl;
+        for (long unsigned int i = 0; i < graph.size(); ++i)
         {
-            cout << "Vertex " << i << ": INF" << endl;
-        }
-        else
-        {
-            cout << "Vertex " << i << ": " << distances[i] << endl;
+            if (distances[i] == INF)
+            {
+                cout << "Vertex " << i + 1 << ": INF" << endl;
+            }
+            else
+            {
+                cout << "Vertex " << i + 1 << ": " << distances[i] << endl;
+            }
         }
     }
 }
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2)
+    if (argc < 3)
     {
-        cerr << "Usage: " << argv[0] << " <filename>" << endl;
+        cerr << "Usage: " << argv[0] << " <graph_filename> <queries_filename>" << endl;
         return 1;
     }
 
-    string filename = argv[1];
-    auto graph = readGraphFromFile(filename);
-    runDijkstra(graph);
+    string graph_filename = argv[1];
+    string queries_filename = argv[2];
+
+    auto graph = readGraphFromFile(graph_filename);
+    auto queries = readQueriesFromFile(queries_filename);
+
+    runDijkstra(graph, queries);
     return 0;
 }

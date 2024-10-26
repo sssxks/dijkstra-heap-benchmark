@@ -85,7 +85,67 @@ public:
      *
      * @param other The other Fibonacci Heap to copy from.
      */
-    FiboHeap(const FiboHeap &other);
+    FiboHeap(const FiboHeap &other) : minNode(nullptr), nodeCount(0)
+    {
+        if (other.minNode != nullptr)
+        {
+            std::unordered_map<Node *, Node *> nodeMap;
+            std::vector<Node *> nodesToCopy;
+
+            Node *current = other.minNode;
+            do
+            {
+                nodesToCopy.push_back(current);
+                current = current->right;
+            } while (current != other.minNode);
+
+            for (Node *node : nodesToCopy)
+            {
+                Node *newNode = new Node(node->value);
+                nodeMap[node] = newNode;
+                if (minNode == nullptr)
+                {
+                    minNode = newNode;
+                }
+                else
+                {
+                    newNode->left = minNode;
+                    newNode->right = minNode->right;
+                    minNode->right->left = newNode;
+                    minNode->right = newNode;
+                    if (newNode->value < minNode->value)
+                    {
+                        minNode = newNode;
+                    }
+                }
+            }
+
+            for (Node *node : nodesToCopy)
+            {
+                Node *newNode = nodeMap[node];
+                if (node->child != nullptr)
+                {
+                    newNode->child = nodeMap[node->child];
+                }
+                if (node->parent != nullptr)
+                {
+                    newNode->parent = nodeMap[node->parent];
+                }
+                if (node->left != nullptr)
+                {
+                    newNode->left = nodeMap[node->left];
+                }
+                if (node->right != nullptr)
+                {
+                    newNode->right = nodeMap[node->right];
+                }
+                newNode->degree = node->degree;
+                newNode->mark = node->mark;
+            }
+
+            nodeCount = other.nodeCount;
+        }
+    }
 
     /**
      * @brief Copy assignment operator for FiboHeap.
@@ -93,7 +153,78 @@ public:
      * @param other The other Fibonacci Heap to assign from.
      * @return A reference to this Fibonacci Heap.
      */
-    FiboHeap &operator=(const FiboHeap &other);
+    FiboHeap &operator=(const FiboHeap &other)
+    {
+        if (this != &other)
+        {
+            // Clear the current heap
+            while (!empty())
+            {
+                pop();
+            }
+
+            // Copy the other heap
+            if (other.minNode != nullptr)
+            {
+                std::unordered_map<Node *, Node *> nodeMap;
+                std::vector<Node *> nodesToCopy;
+
+                Node *current = other.minNode;
+                do
+                {
+                    nodesToCopy.push_back(current);
+                    current = current->right;
+                } while (current != other.minNode);
+
+                for (Node *node : nodesToCopy)
+                {
+                    Node *newNode = new Node(node->value);
+                    nodeMap[node] = newNode;
+                    if (minNode == nullptr)
+                    {
+                        minNode = newNode;
+                    }
+                    else
+                    {
+                        newNode->left = minNode;
+                        newNode->right = minNode->right;
+                        minNode->right->left = newNode;
+                        minNode->right = newNode;
+                        if (newNode->value < minNode->value)
+                        {
+                            minNode = newNode;
+                        }
+                    }
+                }
+
+                for (Node *node : nodesToCopy)
+                {
+                    Node *newNode = nodeMap[node];
+                    if (node->child != nullptr)
+                    {
+                        newNode->child = nodeMap[node->child];
+                    }
+                    if (node->parent != nullptr)
+                    {
+                        newNode->parent = nodeMap[node->parent];
+                    }
+                    if (node->left != nullptr)
+                    {
+                        newNode->left = nodeMap[node->left];
+                    }
+                    if (node->right != nullptr)
+                    {
+                        newNode->right = nodeMap[node->right];
+                    }
+                    newNode->degree = node->degree;
+                    newNode->mark = node->mark;
+                }
+
+                nodeCount = other.nodeCount;
+            }
+        }
+        return *this;
+    }
 
     /**
      * @brief Inserts a value into the heap.
@@ -115,12 +246,48 @@ public:
      *
      * @return True if the heap is empty, false otherwise.
      */
-    bool empty() const override;
+    bool empty() const override
+    {
+        return minNode == nullptr;
+    }
 
     /**
      * @brief Destructor for FiboHeap.
      */
-    ~FiboHeap();
+    ~FiboHeap()
+    {
+        if (minNode != nullptr)
+        {
+            std::vector<Node *> nodesToDelete;
+            Node *current = minNode;
+            do
+            {
+                nodesToDelete.push_back(current);
+                current = current->right;
+            } while (current != minNode);
+
+            for (Node *node : nodesToDelete)
+            {
+                std::vector<Node *> childNodes;
+                if (node->child != nullptr)
+                {
+                    Node *child = node->child;
+                    do
+                    {
+                        childNodes.push_back(child);
+                        child = child->right;
+                    } while (child != node->child);
+                }
+
+                for (Node *child : childNodes)
+                {
+                    delete child;
+                }
+
+                delete node;
+            }
+        }
+    }
 };
 
 template <typename T>
@@ -208,6 +375,11 @@ void FiboHeap<T>::consolidate()
 }
 
 template <typename T>
+inline FiboHeap<T>::FiboHeap() : minNode(nullptr), nodeCount(0)
+{
+}
+
+template <typename T>
 void FiboHeap<T>::push(const T &value)
 {
     Node *newNode = new Node(value);
@@ -271,10 +443,4 @@ T FiboHeap<T>::pop()
     delete z;
     nodeCount--;
     return minValue;
-}
-
-template <typename T>
-bool FiboHeap<T>::empty() const
-{
-    return minNode == nullptr;
 }
