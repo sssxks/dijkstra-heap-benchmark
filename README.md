@@ -27,3 +27,7 @@ Documentation: Chapter 1 (1 pt.), Chapter 2 (2 pts.), and finally a complete rep
 ## Report
 
 see [documents/doc.md](documents/doc.md)
+
+## References
+
+https://github.com/YdreamW/20ss
