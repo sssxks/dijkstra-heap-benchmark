@@ -17,7 +17,7 @@ file(GLOB_RECURSE SRC_FILES "src/*.cpp")
 add_executable(pathfinder ${SRC_FILES})
 
 # Set compile options for the executable
-target_compile_options(pathfinder PRIVATE 
+target_compile_options(pathfinder PRIVATE -Ofast -march=native -g -flto
     -Wall -Wextra -Weffc++
     -Werror=uninitialized
     -Werror=return-type

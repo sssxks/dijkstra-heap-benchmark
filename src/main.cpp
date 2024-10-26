@@ -5,12 +5,17 @@
 #include <string>
 #include <cassert>
 #include <limits>
+#include <chrono>
+#include <functional>
 
 #include "pathfinder.hpp"
 #include "fiboheap.hpp"
 #include "referenceheap.hpp"
+#include "binaryheap.hpp"
+#include "skewheap.hpp"
 
 using namespace std;
+using namespace std::chrono;
 
 vector<vector<Edge>> readGraphFromFile(const string &filename)
 {
@@ -24,37 +29,43 @@ vector<vector<Edge>> readGraphFromFile(const string &filename)
     }
 
     string line;
+    int n = 0, m = 0; // n: number of nodes, m: number of arcs
+
+    // Pre-allocate a buffer for reading lines
+    line.reserve(256); // Assuming lines won't exceed 256 characters
+
     while (getline(file, line))
     {
-        if (line.empty() || line[0] == 'c') // c for comment
+        if (line.empty() || line[0] == 'c') // Skip comments
         {
             continue;
         }
 
-        if (line[0] == 'p') // p for size info
+        if (line[0] == 'p') // Parse size info
         {
-            istringstream iss(line.substr(4));
-            int n, m;
-            iss >> n >> m; // n : nodes, m : arcs
-
-            graph.resize(n, vector<Edge>());
+            // Use sscanf for faster parsing
+            sscanf(line.c_str(), "p %*s %d %d", &n, &m);
+            graph.resize(n); // Pre-allocate space for the graph
             continue;
         }
 
-        assert(line[0] == 'a'); // a for arc
-        istringstream iss(line.substr(2));
-        int u, v, w;
-        iss >> u >> v >> w;
-        graph[u - 1].push_back({v - 1, w});
+        if (line[0] == 'a') // Parse arc information
+        {
+            int u, v, w;
+            // Use sscanf for faster parsing
+            sscanf(line.c_str(), "a %d %d %d", &u, &v, &w);
+            graph[u - 1].push_back({v - 1, w});
+        }
     }
 
     file.close();
     return graph;
 }
 
-vector<int> readQueriesFromFile(const string &filename)
+
+vector<pair<int, int>> readQueriesFromFile(const string &filename)
 {
-    vector<int> queries;
+    vector<pair<int, int>> queries;
     ifstream file(filename);
     if (!file.is_open())
     {
@@ -62,36 +73,42 @@ vector<int> readQueriesFromFile(const string &filename)
         exit(1);
     }
 
-    int query;
-    while (file >> query)
+    int start, end;
+    while (file >> start >> end)
     {
-        queries.push_back(query - 1);
+        queries.emplace_back(start - 1, end - 1);
     }
 
     file.close();
     return queries;
 }
 
-void runDijkstra(vector<vector<Edge>> &graph, const vector<int> &queries)
+template <class T>
+void runDijkstra(vector<vector<Edge>> &graph, const vector<pair<int, int>> &queries)
 {
-    for (int start : queries)
+    int64_t total_time = 0;
+    for (const auto &query : queries)
     {
+        int start = query.first;
+        int end = query.second;
         vector<int> distances;
-        dijkstra<FiboHeap<NearestRecord>>(start, graph, distances);
+        auto start_time = high_resolution_clock::now();
+        dijkstra<T>(start, graph, distances);
+        auto end_time = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(end_time - start_time).count();
+        total_time += duration;
 
-        cout << "Shortest distances from vertex " << start + 1 << ":" << endl;
-        for (long unsigned int i = 0; i < graph.size(); ++i)
+        cout << "Shortest distance from vertex " << start + 1 << " to vertex " << end + 1 << ": ";
+        if (distances[end] == INF)
         {
-            if (distances[i] == INF)
-            {
-                cout << "Vertex " << i + 1 << ": INF" << endl;
-            }
-            else
-            {
-                cout << "Vertex " << i + 1 << ": " << distances[i] << endl;
-            }
+            cout << "INF" << endl;
+        }
+        else
+        {
+            cout << distances[end] << endl;
         }
     }
+    cout << "Total time: " << total_time << " microseconds" << endl;
 }
 
 int main(int argc, char *argv[])
@@ -108,6 +125,13 @@ int main(int argc, char *argv[])
     auto graph = readGraphFromFile(graph_filename);
     auto queries = readQueriesFromFile(queries_filename);
 
-    runDijkstra(graph, queries);
+    cout << "Fibonacci Heap:" << endl;
+    runDijkstra<FiboHeap<NearestRecord>>(graph, queries);
+    cout << "Reference Heap:" << endl;
+    runDijkstra<ReferenceHeap<NearestRecord>>(graph, queries);
+    cout << "Binary Heap:" << endl;
+    runDijkstra<BinaryHeap<NearestRecord>>(graph, queries);
+    cout << "Skew Heap:" << endl;
+    runDijkstra<SkewHeap<NearestRecord>>(graph, queries);
     return 0;
 }
