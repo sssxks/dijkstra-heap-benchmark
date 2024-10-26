@@ -30,8 +30,8 @@ This project focuses on implementing and benchmarking Dijkstra's algorithm in re
 ├── test
 │   └── test_pop.cpp
 └── test_cases
-    ├── bench_ny # ln data/USA-road-t.NY.gr input.txt
-    ├── bench_usa # ln data/USA-road-t.USA.gr input.txt
+    ├── bench_ny # symlink data/USA-road-t.NY.gr input.txt
+    ├── bench_usa # symlink data/USA-road-t.USA.gr input.txt
     ├── simplecase1
     └── simplecase2
 ```
@@ -44,7 +44,26 @@ This project focuses on implementing and benchmarking Dijkstra's algorithm in re
     cd /home/flas/source/course/ads/dij_ds_realworld_bench/
     ```
 
-2. **Build the project:**
+2. **Download Data and Link to Test Cases:**
+
+    Download the required datasets and create symbolic links to the test cases. Run the following commands:
+
+    ```sh
+    mkdir -p data
+    cd data
+    # Download datasets (replace with actual URLs)
+    wget http://example.com/USA-road-d.USA.co
+    wget http://example.com/USA-road-d.USA.gr
+    wget http://example.com/USA-road-t.NY.gr
+    wget http://example.com/USA-road-t.USA.gr
+    cd ..
+
+    # Create symbolic links
+    ln -s data/USA-road-t.NY.gr test_cases/bench_ny/input.txt
+    ln -s data/USA-road-t.USA.gr test_cases/bench_usa/input.txt
+    ```
+
+3. **Build the project:**
 
     Use CMake to build the project. Run the following commands:
 
